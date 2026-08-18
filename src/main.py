@@ -1,7 +1,7 @@
 import os
 import shutil
 from textnode import TextNode, TextType
-from generate_page import generate_page
+from generate_page import generate_page, generate_pages_recursive
 
 
 def copy_static_content_to_public_dir(src, dir):
@@ -25,7 +25,7 @@ def main():
     os.mkdir(dir_path)
     copy_static_content_to_public_dir(src_path,dir_path)
 
-    generate_page("content/index.md", "template.html", "public/index.html")
+    generate_pages_recursive("content", "template.html", "public")
     
 if __name__ == "__main__":
     main()
