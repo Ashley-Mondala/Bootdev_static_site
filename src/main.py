@@ -2,6 +2,7 @@ import os
 import shutil
 from textnode import TextNode, TextType
 from generate_page import generate_page, generate_pages_recursive
+import sys
 
 
 def copy_static_content_to_public_dir(src, dir):
@@ -18,14 +19,18 @@ def copy_static_content_to_public_dir(src, dir):
 
 def main():
     dummy = TextNode("This is some anchor text", TextType.LINK, "https://www.boot.dev")
-    dir_path = "public"
+    if len(sys.argv) > 1:
+        basepath = sys.argv[1]
+    else:
+        basepath = "/"
+    dir_path = "docs"
     src_path = "static"
     if os.path.exists(dir_path):
         shutil.rmtree(dir_path)
     os.mkdir(dir_path)
     copy_static_content_to_public_dir(src_path,dir_path)
 
-    generate_pages_recursive("content", "template.html", "public")
+    generate_pages_recursive("content", "template.html",dir_path, basepath)
     
 if __name__ == "__main__":
     main()

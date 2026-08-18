@@ -4,7 +4,7 @@ from extract_title import extract_title
 
 
 
-def generate_page(from_path, template_path, dest_path):
+def generate_page(from_path, template_path, dest_path, basepath):
     print(f"Generating page from {from_path} to {dest_path} using {template_path}")
 
     with open(from_path) as f:
@@ -21,6 +21,8 @@ def generate_page(from_path, template_path, dest_path):
 
     template = template.replace("{{ Title }}", title)
     template = template.replace("{{ Content }}", html_string)
+    template = template.replace('href="/', f'href="{basepath}')
+    template = template.replace('src="/', f'src="{basepath}')
 
     dest_path_dirname = os.path.dirname(dest_path)
     os.makedirs(dest_path_dirname, exist_ok=True)
@@ -29,7 +31,7 @@ def generate_page(from_path, template_path, dest_path):
         d.write(template)
 
 
-def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
+def generate_pages_recursive(dir_path_content, template_path, dest_dir_path, basepath):
     content_list = os.listdir(dir_path_content)
     
     for entry in content_list:
@@ -41,7 +43,7 @@ def generate_pages_recursive(dir_path_content, template_path, dest_dir_path):
             if not entry.endswith(".md"):
                 continue
 
-            generate_page(new_dir_path_content, template_path, new_dest_dir_path.replace(".md", ".html"))
+            generate_page(new_dir_path_content, template_path, new_dest_dir_path.replace(".md", ".html"), basepath)
         
         else:
-            generate_pages_recursive(new_dir_path_content, template_path, new_dest_dir_path)
+            generate_pages_recursive(new_dir_path_content, template_path, new_dest_dir_path, basepath)
